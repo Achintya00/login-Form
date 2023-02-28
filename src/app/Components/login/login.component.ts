@@ -1,3 +1,4 @@
+import { MyApiService } from './../../services/my-api.service';
 import { Component, OnInit } from '@angular/core';
 import {
   FormGroup,
@@ -17,7 +18,7 @@ export class LoginComponent implements OnInit {
   get Users() {
     return this.loginForm.get('users') as FormArray;
   }
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder, private service: MyApiService) {}
   ngOnInit(): void {
     this.loginForm = this.fb.group({
       username: [
@@ -33,13 +34,15 @@ export class LoginComponent implements OnInit {
     });
   }
   addLogin() {
-    console.log(this.loginForm.value);
-    this.loginForm.reset({
-      username: '',
-      password: '',
-      // address:new FormControl(''),
-      users: this.fb.array([]),
+    this.service.addDetails(this.loginForm.getRawValue()).subscribe((data) => {
+      console.log(data);
     });
+    // this.loginForm.reset({
+    //   username: '',
+    //   password: '',
+    //   // address:new FormControl(''),
+    //   users: this.fb.array([]),
+    // });
   }
   addUsers(e: Event) {
     e.preventDefault();
